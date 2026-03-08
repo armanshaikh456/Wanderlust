@@ -76,13 +76,9 @@ app.use((req, res, next) => {
     res.locals.msg = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user || null;
+    console.log(res.locals.currUser);
     next();
 });
-
-app.use((req, res, next) => {
-    res.locals.currUser = req.session.user || null;
-    next();
-})
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
