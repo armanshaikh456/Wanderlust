@@ -43,7 +43,7 @@ store.on("error", () => {
 
 const sessionOptions = {
     store,  
-    secret: process.env.SECREt,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -73,6 +73,7 @@ app.use(methodOverride("_method"))
 app.use(express.static(path.join(__dirname, "/public")))
 
 app.use((req, res, next) => {
+    console.log(req.user);
     res.locals.msg = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user || null;
