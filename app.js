@@ -79,11 +79,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    res.locals.currUser = req.session.user || null;
+    next();
+})
+
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/", userRouter);
 
-// app.use('/', listingRouter)
 //search route
 app.get("/search", async (req, res) => {
     const searchQuery = req.query.title;
