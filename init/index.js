@@ -1,22 +1,43 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const initData = require("./data.js")
-const Listing = require("../models/listing")
+const {MongoClient} = require("mongodb")
+// const Listing = require("../models/listing")
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"
-main()
-    .then((res) => console.log("connected to DB"))
-    .catch(err => console.log(err));
+// import { MongoClient } from "mongodb";
 
-async function main() {
-  await mongoose.connect(MONGO_URL);
-}
+const uri = `mongodb+srv://delta-student:KxzhacXm2wonqZOk@cluster0.oebait5.mongodb.net/?appName=Cluster0`;
+const client = new MongoClient(uri);
+
+
+
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"
+// main()
+//     .then((res) => console.log("connected to DB"))
+//     .catch(err => console.log(err));
+
+// async function main() {
+//   await mongoose.connect(MONGO_URL);
+// }
 
 const initDB = async () => {
-    await Listing.deleteMany({});
-    let Data = initData.data.map((obj) => ({ ...obj, owner : '696ca3c39d372911efe8eb7a'}));
-    await Listing.insertMany(Data);
-    console.log("data was initialized");
-  const listing = await Listing.find();
-  console.log(listing);
+  try {
+    await client.connect();
+    const database = client.db("test");
+    const listing = database.collection("listings");
+    await listing.deleteMany({});
+    let Data = initData.data.map((obj) => ({ ...obj, owner:  '69ac656406f89b6db7caed12'}));
+    const result = await listing.insertMany(Data);
+    console.log("document inserted");
+    // await Listing.deleteMany({});
+    // await Listing.insertMany(Data);
+    // console.log("data was initialized");
+    // const listing = await Listing.find();
+    // console.log(listing);
+  } catch (e) {
+    console.log(e)
+  } finally{
+    client.close();
+  }
+
 }
 initDB()
